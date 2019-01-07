@@ -56,16 +56,17 @@ sonar-scanner \
 set -e
 
 Example with ios 
-#!/bin/bash
+#!/bin/bash -l
 
-#export LANG=en_US.UTF-8
-#xcodebuild -list -workspace WellBe.xcworkspace #list all schema
-
-#pod install
-
+export LANG=en_US.UTF-8
+xcodebuild -list -workspace WellBe.xcworkspace #list all schema
+#need unlock keychain
+security unlock -p 11111111 /Users/neos/Library/Keychains/login.keychain-db
+pod install
+./build.sh
 #export file archive 
 #xcodebuild -workspace WellBe.xcworkspace -scheme WellBe -destination generic/platform=iOS build archive -archivePath build/WellBe.xcarchive
-
+#xcodebuild -workspace WellBe.xcworkspace -scheme WellBe -destination generic/platform=iOS build archive -archivePath build/WellBe.xcarchive PRODUCT_BUNDLE_IDENTIFIER="neoscorp.vn.technicaldemo"  PROVISIONING_PROFILE_SPECIFIER="technicalDemoProfile" CODE_SIGN_IDENTITY="iPhone Developer: Minh Nguyen Quang (978Q2BK8LZ)"
 #xcodebuild -workspace WellBe.xcworkspace -scheme WellBe -sdk iphoneos -configuration AppStoreDistribution archive -archivePath build/WellBe.xcarchive
 
 #export file ipa   
@@ -77,4 +78,6 @@ Example with ios
 #altool --upload-app -f "WellBe.ipa" -u $USERNAME -p $PASSWORD
 
 #upload to deploydate
-#dgate push $WORKSPACE/build/WellBe.ipa -m "${GIT_COMMIT}"
+dgate push $WORKSPACE/build/WellBe.ipa -m "${GIT_COMMIT}"
+curl -X POST -H 'Content-type: application/json' --data '{"text":":thumbsup: IOS build R2 - http://localhost:8080/job/IOS_WellBe/changes go to https://deploygate.com to download app"}' https://hooks.slack.com/services/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
+
